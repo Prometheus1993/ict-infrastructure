@@ -1,0 +1,23 @@
+version: "3.8"
+services:
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    deploy:
+      placement:
+        constraints:
+        - node.role == worker
+  flask:
+    image: prometheus1993/flask-redis-app:latest
+    ports:
+      - "5001:5000"
+    depends_on:
+      - redis
+    deploy:
+      replicas: 2
+      placement:
+        constraints:
+        - node.role == worker
+      update_config:
+        delay: 30s
